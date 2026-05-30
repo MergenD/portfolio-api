@@ -11,9 +11,7 @@
   "author": "Mergen Durdyyev",
   "license": "ISC",
   "dependencies": {
-    "@pinecone-database/pinecone": "^6.1.1",
     "axios": "^1.10.0",
-    "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -21,13 +19,10 @@
     "express": "^4.18.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "langchain": "^0.3.30",
     "morgan": "^1.10.1",
     "openai": "^5.10.1",
     "pg": "^8.13.1",
-    "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.1",
-    "uuid": "^11.1.0",
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
