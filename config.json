@@ -1,0 +1,18 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "12345",
+    "database": "portfolio",
+    "host": "localhost",
+    "dialect": "postgres",
+    "logging": false
+  },
+  "production": {
+    "username": "postgres",
+    "password": "12345",
+    "database": "portfolio",
+    "host": "localhost",
+    "dialect": "postgres",
+    "logging": false
+  }
+}
