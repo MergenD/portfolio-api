@@ -10,8 +10,6 @@ class ApplicationsController {
     try {
       const { company, position, salary, submittedAt, url } = req.body;
 
-      console.log(req.body);
-
       if (!company?.trim()) {
         return res.status(400).json({ error: 'Company is required' });
       }

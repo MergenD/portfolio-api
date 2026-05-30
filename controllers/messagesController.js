@@ -7,8 +7,6 @@ class MessagesController {
     try {
       const { name, email, message } = req.body;
 
-      console.log(name, email, message);
-
       if (!name?.trim()) {
         return res.status(400).json({ error: 'Name is required' });
       }
