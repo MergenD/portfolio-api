@@ -18,10 +18,6 @@ class ApplicationsController {
         return res.status(400).json({ error: 'Position is required' });
       }
 
-      if (salary === undefined || salary === null) {
-        return res.status(400).json({ error: 'Salary is required' });
-      }
-
       if (!submittedAt) {
         return res.status(400).json({ error: 'Submitted date is required' });
       }
@@ -38,7 +34,10 @@ class ApplicationsController {
       const record = await Applications.create({
         company: company.trim(),
         position: position.trim(),
-        salary: String(salary).trim(),
+        salary:
+          salary === undefined || salary === null
+            ? ''
+            : String(salary).trim(),
         submittedAt: parsedSubmittedAt,
         url: String(url).trim(),
       });

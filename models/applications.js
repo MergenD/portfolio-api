@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       salary: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         defaultValue: '',
       },
       submittedAt: {
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       url: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
         defaultValue: '',
       },
