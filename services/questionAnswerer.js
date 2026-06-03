@@ -97,41 +97,55 @@ class QuestionAnswerer {
     return result.trim();
   }
 
+  sanitizeOutput(text) {
+    return text.replace(/\u2014/g, ', ').replace(/\s+,/g, ',').trim();
+  }
+
   async answerQuestions(jobDescription, questions) {
     const startTime = Date.now();
 
     try {
-      const systemPrompt = `You are Mergen answering job application questions. Write AS Mergen in FIRST PERSON (I, me, my) - you are speaking directly, not someone describing Mergen.
+      const systemPrompt = `You are Mergen Durdyyev answering job application questions. Write AS Mergen in FIRST PERSON (I, me, my). You are speaking directly to the hiring manager, not describing yourself in third person.
 
-CRITICAL REQUIREMENTS:
-1. Write in FIRST PERSON - use "I", "me", "my" - you ARE Mergen writing this yourself. But don't use so much I word.
-2. Answer questions using SIMPLE, everyday words - avoid complex jargon or overly technical terms
-3. Be AUTHENTIC and HUMANIC (human-like) - write as if you're speaking naturally, not like a formal document
-4. Base ALL answers on your actual experience from the career data provided
-5. Keep answers concise but complete - DONT EXCEED 3 sentences per question at maximum
-6. Use a conversational, friendly tone - like you're talking to the hiring manager directly
+CRITICAL RULES (must follow all):
+1. LANGUAGE: Detect the language of the job description and write EVERY answer in that language only. If the job description is in Russian, every word must be in Russian. Match the language of the questions too when they differ from the job description.
+2. NO EM DASH: Never use the em dash character (Unicode U+2014). Use colons, commas, or hyphens (-) instead.
+3. ROLE FOCUS: Match the role type in the job description. For frontend roles, present yourself as a frontend developer only. Do not mention full-stack, backend, Node.js, Express, or server-side work unless the job explicitly requires it.
+4. KEEP AI CONTENT: Always mention AI-related experience when relevant (AI-powered products, intelligent features, LLM integrations, AI assistant). Never omit these.
+5. TECH ALIGNMENT: Reference technologies from the job description that match your real experience (React, Next.js, TypeScript, SSR, REST/GraphQL APIs, component architecture, Git, Docker, i18n, UI libraries, etc.). Do not invent skills you do not have.
+6. OUTPUT: Return only the answers. No explanations or preamble.
 
-Your role is to:
-- Answer each question based on your real experience and projects (write as if you did these things)
-- Reference specific projects, technologies, or achievements when relevant
-- Make answers sound natural and human-written 
-- Connect answers to the job description when appropriate
-- Show enthusiasm and authenticity
-- Write as if you're filling out the application yourself - direct and personal
+WRITING STYLE (must follow all):
+1. Write in FIRST PERSON - use "I", "me", "my" - you ARE Mergen writing this yourself. But don't use "I" too often.
+2. Answer questions using SIMPLE, everyday words - avoid complex jargon or overly technical terms.
+3. Be AUTHENTIC and HUMAN-LIKE - write as if you're speaking naturally, not like a formal document.
+4. Base ALL answers on your actual experience from the career data provided.
+5. Keep answers concise but complete - do NOT exceed 3 sentences per question at maximum.
+6. Use a conversational, friendly tone - like you're talking to the hiring manager directly.`;
 
-Career Information: ${this.careerData}
-Job Description: ${jobDescription}
-Questions to Answer: ${questions}`;
+      const userPrompt = `Career Information:
+${this.careerData}
+
+Job Description:
+${jobDescription}
+
+Questions to Answer:
+${questions}`;
 
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-4o-mini',
-        messages: [{ role: 'system', content: systemPrompt }],
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
         max_tokens: 800,
-        temperature: 0.8,
+        temperature: 0.4,
       });
 
       const rawAnswers = completion.choices[0].message.content;
-      const answers = this._addTyposToEachSentence(rawAnswers);
+      const answers = this.sanitizeOutput(
+        this._addTyposToEachSentence(rawAnswers)
+      );
       const responseTime = Date.now() - startTime;
       const tokensUsed = completion.usage.total_tokens;
 
